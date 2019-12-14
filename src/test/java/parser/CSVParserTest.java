@@ -44,45 +44,60 @@ public class CSVParserTest {
 
     @Test
     public void testQuotedCSV() {
-        String simple = String.format("\"%s\",\"%s\"\n\"%s\",\"%s\"", header1, header2, entry1, entry2);
+        String quotedHeader1 = "\"" + header1 + "\"";
+        String quotedHeader2 = "\"" + header2 + "\"";
+        String quotedEntry1 = "\"" + entry1 + "\"";
+        String quotedEntry2 = "\"" + entry2 + "\"";
+        String simple = String.format("%s,%s\n%s,%s", quotedHeader1, quotedHeader2, quotedEntry1, quotedEntry2);
         CSVParser parser = new CSVParser();
         CSV csv = parser.parse(simple);
-        assertEquals(header1, csv.getHeaders().get(0));
-        assertEquals(header2, csv.getHeaders().get(1));
-        assertEquals(entry1, csv.getRows().get(0).get(0));
-        assertEquals(entry2, csv.getRows().get(0).get(1));
+        assertEquals(quotedHeader1, csv.getHeaders().get(0));
+        assertEquals(quotedHeader2, csv.getHeaders().get(1));
+        assertEquals(quotedEntry1, csv.getRows().get(0).get(0));
+        assertEquals(quotedEntry2, csv.getRows().get(0).get(1));
     }
 
     @Test
     public void testQuotedCSVWithSpaces() {
-        String simple = String.format("\"%s\", \"%s\"\n\"%s\", \"%s\"", header1, header2, entry1, entry2);
+        // TODO: resolve whether this is actually permitted behaviour, or if quotes must be the first and last characters of a value, if present at all
+        String quotedHeader1 = "\"" + header1 + "\"";
+        String quotedHeader2 = " \"" + header2 + "\"";
+        String quotedEntry1 = "\"" + entry1 + "\"";
+        String quotedEntry2 = " \"" + entry2 + "\"";
+        String simple = String.format("%s,%s\n%s,%s", quotedHeader1, quotedHeader2, quotedEntry1, quotedEntry2);
         CSVParser parser = new CSVParser();
         CSV csv = parser.parse(simple);
-        assertEquals(header1, csv.getHeaders().get(0));
-        assertEquals(header2, csv.getHeaders().get(1));
-        assertEquals(entry1, csv.getRows().get(0).get(0));
-        assertEquals(entry2, csv.getRows().get(0).get(1));
+        assertEquals(quotedHeader1, csv.getHeaders().get(0));
+        assertEquals(quotedHeader2, csv.getHeaders().get(1));
+        assertEquals(quotedEntry1, csv.getRows().get(0).get(0));
+        assertEquals(quotedEntry2, csv.getRows().get(0).get(1));
     }
 
     @Test
     public void testQuotedCSVWithCommas() {
-        String simple = String.format("\"%s\",\"%s\"\n\"%s\",\"%s\"", header1, headerWithCommas, entry1, entryWithCommas);
+        String quotedHeader1 = "\"" + header1 + "\"";
+        String quotedHeader2 = "\"" + headerWithCommas + "\"";
+        String quotedEntry1 = "\"" + entry1 + "\"";
+        String quotedEntry2 = "\"" + entryWithCommas + "\"";
+        String simple = String.format("%s,%s\n%s,%s", quotedHeader1, quotedHeader2, quotedEntry1, quotedEntry2);
         CSVParser parser = new CSVParser();
         CSV csv = parser.parse(simple);
-        assertEquals(header1, csv.getHeaders().get(0));
-        assertEquals(headerWithCommas, csv.getHeaders().get(1));
-        assertEquals(entry1, csv.getRows().get(0).get(0));
-        assertEquals(entryWithCommas, csv.getRows().get(0).get(1));
+        assertEquals(quotedHeader1, csv.getHeaders().get(0));
+        assertEquals(quotedHeader2, csv.getHeaders().get(1));
+        assertEquals(quotedEntry1, csv.getRows().get(0).get(0));
+        assertEquals(quotedEntry2, csv.getRows().get(0).get(1));
     }
 
     @Test
     public void testCSVWithQuotedDelimitersOnly() {
-        String simple = String.format("%s,\"%s\"\n%s,\"%s\"", header1, headerWithCommas, entry1, entryWithCommas);
+        String quotedHeader2 = "\"" + headerWithCommas + "\"";
+        String quotedEntry2 = "\"" + entryWithCommas + "\"";
+        String simple = String.format("%s,%s\n%s,%s", header1, quotedHeader2, entry1, quotedEntry2);
         CSVParser parser = new CSVParser();
         CSV csv = parser.parse(simple);
         assertEquals(header1, csv.getHeaders().get(0));
-        assertEquals(headerWithCommas, csv.getHeaders().get(1));
+        assertEquals(quotedHeader2, csv.getHeaders().get(1));
         assertEquals(entry1, csv.getRows().get(0).get(0));
-        assertEquals(entryWithCommas, csv.getRows().get(0).get(1));
+        assertEquals(quotedEntry2, csv.getRows().get(0).get(1));
     }
 }
