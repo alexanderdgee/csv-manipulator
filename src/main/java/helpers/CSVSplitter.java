@@ -16,6 +16,7 @@ public class CSVSplitter {
         int startOfValue = 0;
         int i = 0;
         boolean insideQuotes = false;
+        boolean separatorCharacterSeen = false;
         boolean escapeCharacterSeen = false;
         while (i < csvString.length()) {
             char c = csvString.charAt(i);
@@ -25,7 +26,10 @@ public class CSVSplitter {
                 }
             } else if (!insideQuotes && c == separator) {
                 row.add(csvString.substring(startOfValue, i));
-                startOfValue = i + 1;
+                i++;
+                startOfValue = i;
+                separatorCharacterSeen = true;
+                continue;
             } else if (insideQuotes && c == escape) {
                 escapeCharacterSeen = !escapeCharacterSeen;
                 i++;
@@ -39,12 +43,16 @@ public class CSVSplitter {
                 continue;
             }
             escapeCharacterSeen = false;
+            separatorCharacterSeen = false;
             i++;
         }
         if (insideQuotes) {
             throw new InvalidCSVException("Unmatched quotes detected");
         }
-        if (startOfValue < csvString.length()) {
+        if (separatorCharacterSeen) {
+            // last character of file was a comma: last row should have an empty string
+            row.add("");
+        } else if (startOfValue < csvString.length()) {
             row.add(csvString.substring(startOfValue));
         }
         if (row.size() > 0) {
