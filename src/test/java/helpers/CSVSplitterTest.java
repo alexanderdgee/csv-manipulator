@@ -66,7 +66,7 @@ public class CSVSplitterTest {
         assertLineCount(1, split);
         assertValueCountInRow(2, 0, split);
         assertValueAtPositionInRow("\"thing\\\\\"", 0, 0, split);
-        assertValueAtPositionInRow("\"else\"", 0, 0, split);
+        assertValueAtPositionInRow("\"else\"", 0, 1, split);
     }
 
     @Test

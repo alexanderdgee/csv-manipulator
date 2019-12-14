@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVSplitter {
+    public static final char escape = '\\';
+
     public static List<List<String>> split(String csvString, char quoteDelimiter, char separator) throws InvalidCSVException {
         // assumes quotes have highest priority
         // TODO: manage line separators from different systems
@@ -14,14 +16,20 @@ public class CSVSplitter {
         int startOfValue = 0;
         int i = 0;
         boolean insideQuotes = false;
+        boolean escapeCharacterSeen = false;
         while (i < csvString.length()) {
             char c = csvString.charAt(i);
             if (c == quoteDelimiter) {
-                // TODO: manage escaped quotes
-                insideQuotes = !insideQuotes;
+                if (!(insideQuotes && escapeCharacterSeen)) {
+                    insideQuotes = !insideQuotes;
+                }
             } else if (!insideQuotes && c == separator) {
                 row.add(csvString.substring(startOfValue, i));
                 startOfValue = i + 1;
+            } else if (insideQuotes && c == escape) {
+                escapeCharacterSeen = !escapeCharacterSeen;
+                i++;
+                continue;
             } else if (!insideQuotes && substringMatch(csvString, System.lineSeparator(), i)) {
                 row.add(csvString.substring(startOfValue, i));
                 i += System.lineSeparator().length();
@@ -30,6 +38,7 @@ public class CSVSplitter {
                 row = new ArrayList<>();
                 continue;
             }
+            escapeCharacterSeen = false;
             i++;
         }
         if (insideQuotes) {
