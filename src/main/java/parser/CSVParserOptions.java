@@ -5,4 +5,5 @@ public class CSVParserOptions {
     public char separator = ',';
     public boolean constrainToHeaderSize = false;
     public boolean requireCompleteRows = false;
+    public boolean strictQuotePositions = true;
 }

@@ -4,7 +4,6 @@ import csv.BasicCSV;
 import csv.CSV;
 import helpers.CSVSplitter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CSVParser {
@@ -19,7 +18,8 @@ public class CSVParser {
     }
 
     public CSV parse(String csvString) throws InvalidCSVException {
-        List<List<String>> values = CSVSplitter.split(csvString, options.quoteDelimiter, options.separator);
+        List<List<String>> values = CSVSplitter.split(csvString, options.quoteDelimiter, options.separator,
+                options.strictQuotePositions);
         List<String> headers = values.remove(0);
         constrainToHeaders(headers, values);
         return new BasicCSV(headers, values);
