@@ -6,7 +6,6 @@ import parser.CSVParserOptions;
 import parser.InvalidCSVException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,11 +49,6 @@ public class CSVUtils {
     }
 
     public static void writeCSV(String fileName, CSV csv, CSVParserOptions options) throws IOException {
-        List<String> output = new ArrayList<>();
-        output.add(String.join(String.valueOf(options.separator), csv.getHeaders()));
-        output.addAll(csv.getRows().stream()
-                .map((List<String> row) -> String.join(String.valueOf(options.separator), row))
-                .collect(Collectors.toList()));
-        FileUtils.writeLines(fileName, output);
+        FileUtils.writeLines(fileName, csv.getSerialisedLines(String.valueOf(options.separator)));
     }
 }

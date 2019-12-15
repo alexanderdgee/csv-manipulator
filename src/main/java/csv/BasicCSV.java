@@ -1,6 +1,8 @@
 package csv;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BasicCSV implements CSV {
     private List<String> headers;
@@ -24,5 +26,14 @@ public class BasicCSV implements CSV {
     @Override
     public List<List<String>> getRows() {
         return rows;
+    }
+
+    @Override
+    public List<String> getSerialisedLines(String separator) {
+        List<String> output = new ArrayList<>();
+        output.add(String.join(separator, getHeaders()));
+        output.addAll(getRows().stream().map((List<String> row) -> String.join(separator, row))
+                .collect(Collectors.toList()));
+        return output;
     }
 }
