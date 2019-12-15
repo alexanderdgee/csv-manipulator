@@ -10,6 +10,7 @@ public class CSVSplitter {
 
     public static List<List<String>> split(String csvString, char quoteDelimiter, char separator) throws InvalidCSVException {
         // assumes quotes have highest priority
+        // TODO: cope with all UTF8 characters, not just those representable by single chars
         // TODO: manage line separators from different systems
         List<List<String>> rows = new ArrayList<>();
         List<String> row = new ArrayList<>();
