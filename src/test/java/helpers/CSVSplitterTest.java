@@ -94,6 +94,28 @@ public class CSVSplitterTest {
         CSVSplitter.split(input, defaultOptions.quoteDelimiter, defaultOptions.separator);
     }
 
+    @Test
+    public void testEmptyStringFromAdjacentSeparators() throws InvalidCSVException {
+        String input = ",,";
+        List<List<String>> split = CSVSplitter.split(input, defaultOptions.quoteDelimiter, defaultOptions.separator);
+        assertLineCount(1, split);
+        assertValueCountInRow(3, 0, split);
+        assertValueAtPositionInRow("", 0, 0, split);
+        assertValueAtPositionInRow("", 0, 1, split);
+        assertValueAtPositionInRow("", 0, 2, split);
+    }
+
+    @Test
+    public void testEmptyRowFromAdjacentLineSeparators() throws InvalidCSVException {
+        String input = System.lineSeparator() + System.lineSeparator();
+        List<List<String>> split = CSVSplitter.split(input, defaultOptions.quoteDelimiter, defaultOptions.separator);
+        assertLineCount(2, split);
+        assertValueCountInRow(1, 0, split);
+        assertValueAtPositionInRow("", 0, 0, split);
+        assertValueCountInRow(1, 1, split);
+        assertValueAtPositionInRow("", 1, 0, split);
+    }
+
     public void assertLineCount(int expected, List<List<String>> split) {
         assertEquals(expected, split.size());
     }
